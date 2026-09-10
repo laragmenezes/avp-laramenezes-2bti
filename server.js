@@ -6,15 +6,12 @@ const port = 3000;
 
 app.use(express.json());
 
-const alunos = [
-  { id: 1, nome: "Augusto", turma: "2TIB" },
-  { id: 2, nome: "Gustavo", turma: "2TIB" },
-  { id: 3, nome: "Rayssa", turma: "2TIB" },
-  { id: 4, nome: "Amanda", turma: "2TIB" },
-  { id: 5, nome: "Marcos", turma: "2TIB" },
-  { id: 6, nome: "Michelly", turma: "2TIB" },
-  { id: 7, nome: "Maria Fernanda", turma: "2TIB" },
-  { id: 8, nome: "Fellype", turma: "2TIB" }
+const carros = [
+  { id: 1, marca: "Toyota", modelo: "Corolla", ano: 2024 },
+  { id: 2, marca: "Volkswagen", modelo: "T-Cross", ano: 2023 },
+  { id: 3, marca: "Honda", modelo: "Civic", ano: 2022 },
+  { id: 4, marca: "Chevrolet", modelo: "Onix", ano: 2024 },
+  { id: 5, marca: "Fiat", modelo: "Fastback", ano: 2023 }
 ];
 
 function autenticar(req, res, next) {
@@ -32,83 +29,88 @@ function autenticar(req, res, next) {
 
 app.get("/", (req, res) => {
   res.json({
-    mensagem: "Servidor Express funcionando!",
+    mensagem: "API de carros funcionando!",
     disciplina: "Desenvolvimento de Websites",
     bimestre: "3º bimestre"
   });
 });
 
-app.get("/alunos", autenticar, (req, res) => {
-  res.json(alunos);
+app.get("/carros", autenticar, (req, res) => {
+  res.json(carros);
 });
 
-app.get("/alunos/:id", (req, res) => {
+app.get("/carros/:id", (req, res) => {
   const id = Number(req.params.id);
 
-  const aluno = alunos.find((aluno) => aluno.id === id);
+  const carro = carros.find((carro) => carro.id === id);
 
-  if (!aluno) {
+  if (!carro) {
     return res.status(404).json({
-      message: "Aluno não encontrado"
+      message: "Carro não encontrado"
     });
   }
 
-  res.json(aluno);
+  res.json(carro);
 });
 
-app.post("/alunos", autenticar, (req, res) => {
-  const novoAluno = {
-    id: alunos.length + 1,
-    nome: req.body.nome,
-    turma: req.body.turma
+app.post("/carros", autenticar, (req, res) => {
+  const novoCarro = {
+    id: carros.length + 1,
+    marca: req.body.marca,
+    modelo: req.body.modelo,
+    ano: req.body.ano
   };
 
-  alunos.push(novoAluno);
+  carros.push(novoCarro);
 
   res.status(201).json({
-    mensagem: "Aluno cadastrado com sucesso",
-    aluno: novoAluno
+    mensagem: "Carro cadastrado com sucesso",
+    carro: novoCarro
   });
 });
 
-app.patch("/alunos/:id", autenticar, (req, res) => {
+app.patch("/carros/:id", autenticar, (req, res) => {
   const id = Number(req.params.id);
-  const { nome, turma } = req.body;
+  const { marca, modelo, ano } = req.body;
 
-  const aluno = alunos.find((aluno) => aluno.id === id);
+  const carro = carros.find((carro) => carro.id === id);
 
-  if (!aluno) {
+  if (!carro) {
     return res.status(404).json({
-      message: "Aluno não encontrado"
+      message: "Carro não encontrado"
     });
   }
 
-  if (nome) {
-    aluno.nome = nome;
+  if (marca) {
+    carro.marca = marca;
   }
 
-  if (turma) {
-    aluno.turma = turma;
+  if (modelo) {
+    carro.modelo = modelo;
   }
 
-  res.json(aluno);
+  if (ano) {
+    carro.ano = ano;
+  }
+
+  res.json(carro);
 });
 
-app.delete("/alunos/:id", autenticar, (req, res) => {
+app.delete("/carros/:id", autenticar, (req, res) => {
   const id = Number(req.params.id);
 
-  const alunoIndex = alunos.findIndex((aluno) => aluno.id === id);
+  const carroIndex = carros.findIndex((carro) => carro.id === id);
 
-  if (alunoIndex === -1) {
+  if (carroIndex === -1) {
     return res.status(404).json({
-      message: "Aluno não encontrado"
+      message: "Carro não encontrado"
     });
   }
 
-  alunos.splice(alunoIndex, 1);
+  carros.splice(carroIndex, 1);
 
   res.json({
-    message: "Aluno removido com sucesso"
+    message: "Carro removido com sucesso"
   });
 });
 
